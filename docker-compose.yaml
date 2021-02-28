@@ -14,12 +14,12 @@ services:
       - ./.env
     restart: always
   web:
-    image: zaebumba/foodgram_project:latest
+    image: zaebumba/foodgram_project:v1
     command: /bin/sh -c "
       python manage.py collectstatic --noinput &&
       python manage.py makemigrations --noinput &&
       python manage.py migrate --noinput &&
-      python manage.py load_ingredients db &&
+      python manage.py load_ingredients &&
       gunicorn foodgram_project.wsgi:application --bind 0.0.0.0:8000
       "
     volumes:
