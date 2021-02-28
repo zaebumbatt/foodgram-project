@@ -9,10 +9,12 @@
             {% include "includes/tags.html" %}
         </div>
         <div class="author-subscribe" data-author="{{ author_id }}">
-        {% if author_id not in followers_ids %}
-            <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
-        {% else %}
-            <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe">Отписаться от автора</button></p>
+        {% if user.is_authenticated and author_id != request.user.id %}
+            {% if author_id not in followers_ids %}
+                <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
+            {% else %}
+                <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe">Отписаться от автора</button></p>
+            {% endif %}
         {% endif %}
         </div>
         <div class="card-list">

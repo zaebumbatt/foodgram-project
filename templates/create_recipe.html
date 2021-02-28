@@ -73,7 +73,8 @@
                 <div class="form__group">
                     <span class="form__label">Загрузить фото</span>
                     <div class="form__field-group">
-                        <input type="file" name="file" id="id_file" required>
+                        <label for="id_file" class="form__file-button">Выбрать файл</label>
+                        <input type="file" class="form__file" name="image" id="id_file" required>
                         <span class="form__error"></span>
                     </div>
                 </div>
@@ -89,4 +90,3 @@
 <script src="{% static 'js/api/Api.js' %}"></script>
 <script src="{% static 'js/formRecipe.js' %}"></script>
 {% endblock content %}
-
