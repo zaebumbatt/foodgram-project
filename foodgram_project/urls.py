@@ -14,7 +14,7 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('profile/', include('django.contrib.flatpages.urls')),
+    path('', include('django.contrib.flatpages.urls')),
     path('about/', views.flatpage, {'url': '/about/'}, name='about'),
     path(
         'portfolio/',

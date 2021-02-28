@@ -226,8 +226,8 @@ def edit_recipe(request, slug):
         if recipe_form.is_valid():
             recipe = recipe_form.save()
 
-        RecipeIngredient.objects.filter(recipe=recipe).delete()
         if ingredients:
+            RecipeIngredient.objects.filter(recipe=recipe).delete()
             for i in range(0, len(ingredients), 2):
                 ingredient = Ingredient.objects.get(title=ingredients[i])
                 recipe_ingredient_form = RecipeIngredientForm(
