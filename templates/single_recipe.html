@@ -48,7 +48,7 @@
                         <li class="single-card__item"><button class="button button_style_light-blue-outline" name="purchases"><span class="icon-check"></span> Рецепт добавлен</button></li>
                         {% endif %}
 
-                        {% if recipe.author.id not in followers_ids %}
+                        {% if recipe.author.id not in followers_ids and recipe.author != request.user.id %}
                         <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
                         {% else %}
                         <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe">Отписаться от автора</button></li>

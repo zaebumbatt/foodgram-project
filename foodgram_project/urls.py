@@ -14,12 +14,12 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('', include('django.contrib.flatpages.urls')),
-    path('about/', views.flatpage, {'url': '/about/'}, name='about'),
+    path('profile/', include('django.contrib.flatpages.urls')),
+    path('about/', views.flatpage, {'url': '/profile/about/'}, name='about'),
     path(
         'portfolio/',
         views.flatpage,
-        {'url': '/portfolio/'},
+        {'url': '/profile/portfolio/'},
         name='portfolio'
     ),
 ]
