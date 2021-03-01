@@ -19,7 +19,10 @@
                                 {% if recipe.author == follower.author %}
                                 <li class="card-user__item">
                                     <div class="recipe">
-                                        <img src="{{ recipe.image.url }}" alt="какой-то-текст" class="recipe__image">
+                                        {% load thumbnail %}
+                                        {% thumbnail recipe.image "480x480" crop="center" upscale=True as im %}
+                                        <img src="{{ im.url }}" alt="какой-то-текст" class="recipe__image">
+                                        {% endthumbnail %}
                                         <h3 class="recipe__title">{{ recipe.name }}</h3>
                                         <p class="recipe__text"><span class="icon-time"></span> {{ recipe.time }} мин.</p>
                                     </div>
