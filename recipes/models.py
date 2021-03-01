@@ -27,7 +27,7 @@ class Recipe(models.Model):
         self.slug = slugify(self.name, allow_unicode=True)
         letters = string.ascii_lowercase
 
-        while Recipe.objects.filter(slug=self.slug):
+        while Recipe.objects.filter(slug=self.slug).exists():
             self.slug += random.choice(letters)
 
         super().save(*args, **kwargs)
