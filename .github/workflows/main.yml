@@ -11,16 +11,16 @@ on:
 jobs:
   copy:
     runs-on: ubuntu-latest
-
-  - name: copy file via ssh password
-    uses: appleboy/scp-action@master
-    with:
-      host: ${{ secrets.HOST }}
-      username: ${{ secrets.USER }}
-      key: ${{ secrets.SSH_KEY }}
-      passphrase: ${{ secrets.PASSPHRASE }}
-      source: "docker-compose.yaml,nginx/default.conf"
-      target: "foodgram-project"
+    steps:
+    - name: copy file via ssh password
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.SSH_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        source: "docker-compose.yaml,nginx/default.conf"
+        target: "yamdb_final"
 
   build_and_push_to_docker_hub:
     name: Push Docker image to Docker Hub
