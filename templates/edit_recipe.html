@@ -65,7 +65,7 @@
                             <div class="form__field-item-ingredient" id="ing_3">
                                 <span> {{ ingredient.ingredient.title|capfirst }} - {{ ingredient.amount }} {{ ingredient.ingredient.dimension }}.</span>
                                 <span class="form__field-item-delete"></span>
-                                <input id="nameIngredient_3" name="nameIngredient_3" type="hidden" value="{{ ingredient.title|capfirst }}">
+                                <input id="nameIngredient_3" name="nameIngredient_3" type="hidden" value="{{ ingredient.ingredient.title }}">
                                 <input id="valueIngredient_3" name="valueIngredient_3" type="hidden" value="{{ ingredient.amount }}">
                                 <input id="unitsIngredient_3" name="unitsIngredient_3" type="hidden" value="{{ ingredient.ingredient.dimension }}.">
                             </div>
