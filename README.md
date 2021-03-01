@@ -1,4 +1,4 @@
 # foodgram-project
 foodgram-project
 
-http://104.248.30.36:8080/
+http://142.93.108.170:8080/
