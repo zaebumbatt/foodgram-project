@@ -10,7 +10,7 @@ from recipes.models import Favorite, Follow, Ingredient, ShoppingList
 @api_view(['GET'])
 def ingredients(request):
     query = request.GET.get('query')
-    ingredient = Ingredient.objects.filter(title__startswith=query)
+    ingredient = Ingredient.objects.filter(title__istartswith=query)
     serializer = IngredientSerializer(ingredient, many=True)
     return Response(serializer.data)
 
@@ -30,9 +30,9 @@ def purchases(request, id=None):
 
     if request.method == 'DELETE':
         item = ShoppingList.objects.get(recipe__id=id)
-        if item:
-            item.delete()
-            return Response({'success': True})
+        if item.delete():
+            return Response({'success': True}, status=status.HTTP_200_OK)
+        return Response({'fail': False}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST', 'DELETE'])
@@ -50,8 +50,7 @@ def favorites(request, id=None):
         return Response({'fail': False}, status=status.HTTP_400_BAD_REQUEST)
     if request.method == 'DELETE':
         item = Favorite.objects.get(user=user, recipe__id=id)
-        if item:
-            item.delete()
+        if item.delete():
             return Response({'success': True}, status=status.HTTP_200_OK)
         return Response({'fail': False}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -71,7 +70,6 @@ def subscriptions(request, id=None):
         return Response({'fail': False}, status=status.HTTP_400_BAD_REQUEST)
     if request.method == 'DELETE':
         item = Follow.objects.get(user=user, author__id=id)
-        if item:
-            item.delete()
+        if item.delete():
             return Response({'success': True}, status=status.HTTP_200_OK)
         return Response({'fail': False}, status=status.HTTP_400_BAD_REQUEST)
