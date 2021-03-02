@@ -1,9 +1,9 @@
-
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
+from foodgram_project.settings import COUNT_RECIPE
 from recipes.forms import RecipeForm, RecipeIngredientForm
 from recipes.models import (Favorite, Follow, Ingredient, Recipe,
                             RecipeIngredient, ShoppingList)
@@ -16,7 +16,7 @@ def index(request):
     favorites_ids = None
     recipes, tag = tags_filter(request)
 
-    paginator = Paginator(recipes, 6)
+    paginator = Paginator(recipes, COUNT_RECIPE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
@@ -43,37 +43,9 @@ def index(request):
 @login_required
 def create_recipe(request):
     if request.method == 'POST':
-        new_recipe = {
-            'tag': [],
-            'author': request.user,
-        }
-        ingredients = []
-
-        for key, value in request.POST.items():
-            if key in ['name', 'time', 'description']:
-                new_recipe[key] = value
-            elif key in ['breakfast', 'lunch', 'dinner']:
-                new_recipe['tag'].append(key)
-            elif (key.startswith('nameIngredient')
-                  or key.startswith('valueIngredient')):
-                ingredients.append(value)
-
-        recipe_form = RecipeForm(new_recipe, request.FILES)
-
+        recipe_form = RecipeForm(request.POST, request.FILES, username=request.user)
         if recipe_form.is_valid():
-            recipe = recipe_form.save()
-
-        for i in range(0, len(ingredients), 2):
-            ingredient = Ingredient.objects.get(title=ingredients[i])
-            recipe_ingredient_form = RecipeIngredientForm(
-                {
-                    'recipe': recipe,
-                    'ingredient': ingredient,
-                    'amount': ingredients[i + 1]
-                }
-            )
-            if recipe_ingredient_form.is_valid():
-                recipe_ingredient_form.save()
+            recipe_form.save()
 
         return redirect('index')
 
@@ -93,7 +65,7 @@ def author_recipes(request, slug):
     followers_ids = None
     recipes, tag = tags_filter(request, author=slug)
     author_id = User.objects.get(username=slug).id
-    paginator = Paginator(recipes, 6)
+    paginator = Paginator(recipes, COUNT_RECIPE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
@@ -131,7 +103,7 @@ def favorites(request):
         favourites = [-1]
 
     recipes, tag = tags_filter(request, favourites=favourites)
-    paginator = Paginator(recipes, 6)
+    paginator = Paginator(recipes, COUNT_RECIPE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
 
