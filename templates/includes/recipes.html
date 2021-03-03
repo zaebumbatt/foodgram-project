@@ -38,7 +38,7 @@
         {% endif %}
 
         {% else %}
-        <button onclick="location.href='/login'" class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
+        <button onclick="location.href='{% url "login" %}'" class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
         {% endif %}
     </div>
 </div>

@@ -17,19 +17,16 @@ def tags_filter(request, author=None, favourites=None):
         recipes = (Recipe.objects
                    .select_related('author')
                    .prefetch_related('recipe_ingredient')
-                   .order_by('-date_created')
                    .filter(tag__overlap=state, author__username=author))
     elif favourites:
         recipes = (Recipe.objects
                    .select_related('author')
                    .prefetch_related('recipe_ingredient')
-                   .order_by('-date_created')
                    .filter(tag__overlap=state, favourite__in=favourites))
     else:
         recipes = (Recipe.objects
                    .select_related('author')
                    .prefetch_related('recipe_ingredient')
-                   .order_by('-date_created')
                    .filter(tag__overlap=state))
 
     tag = {key: 'tags__checkbox_active' for key in state}

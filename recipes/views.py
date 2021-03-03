@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
+from django.template import RequestContext
 
 from foodgram_project.settings import COUNT_RECIPE
 from recipes.forms import RecipeForm, RecipeIngredientForm
@@ -40,31 +41,12 @@ def index(request):
     return render(request, 'index.html', context)
 
 
-@login_required
-def create_recipe(request):
-    if request.method == 'POST':
-        recipe_form = RecipeForm(request.POST, request.FILES, username=request.user)
-        if recipe_form.is_valid():
-            recipe_form.save()
-
-        return redirect('index')
-
-    user = request.user
-    shopping_list_ids = (ShoppingList.objects
-                         .filter(user=user)
-                         .values_list('recipe', flat=True))
-    context = {
-        'shopping_list_ids': shopping_list_ids,
-    }
-    return render(request, 'create_recipe.html', context=context)
-
-
 def author_recipes(request, slug):
     shopping_list_ids = None
     favorites_ids = None
     followers_ids = None
     recipes, tag = tags_filter(request, author=slug)
-    author_id = User.objects.get(username=slug).id
+    author_id = get_object_or_404(User, username=slug).id
     paginator = Paginator(recipes, COUNT_RECIPE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -93,6 +75,86 @@ def author_recipes(request, slug):
     }
 
     return render(request, 'author_recipes.html', context)
+
+
+def single_recipe(request, slug):
+    favorites_ids = None
+    shopping_list_ids = None
+    followers_ids = None
+    recipe = get_object_or_404(Recipe, slug=slug)
+    ingredients = RecipeIngredient.objects.filter(recipe=recipe)
+
+    if not request.user.is_anonymous:
+        user = request.user
+        favorites_ids = (Favorite.objects
+                         .filter(user=user)
+                         .values_list('recipe', flat=True))
+        shopping_list_ids = (ShoppingList.objects
+                             .filter(user=user)
+                             .values_list('recipe', flat=True))
+        followers_ids = (Follow.objects
+                         .filter(user=user)
+                         .values_list('author', flat=True))
+
+    context = {
+        'recipe': recipe,
+        'favorites_ids': favorites_ids,
+        'shopping_list_ids': shopping_list_ids,
+        'followers_ids': followers_ids,
+        'ingredients': ingredients,
+    }
+    return render(request, 'single_recipe.html', context)
+
+
+@login_required
+def create_recipe(request):
+    if request.method == 'POST':
+        recipe_form = RecipeForm(
+            request.POST,
+            request.FILES,
+            username=request.user
+        )
+        if recipe_form.is_valid():
+            recipe_form.save()
+
+        return redirect('index')
+
+    user = request.user
+    shopping_list_ids = (ShoppingList.objects
+                         .filter(user=user)
+                         .values_list('recipe', flat=True))
+    context = {
+        'shopping_list_ids': shopping_list_ids,
+    }
+    return render(request, 'create_recipe.html', context=context)
+
+
+@login_required
+def edit_recipe(request, slug):
+    recipe = get_object_or_404(Recipe, slug=slug)
+    ingredients = RecipeIngredient.objects.filter(recipe=recipe)
+    my_shopping_list = ShoppingList.objects.filter(user=request.user)
+
+    RecipeIngredient.objects.filter(recipe=recipe).delete()
+
+    if request.method == 'POST':
+        recipe_form = RecipeForm(
+            request.POST,
+            request.FILES,
+            username=request.user,
+            instance=recipe,
+        )
+        if recipe_form.is_valid():
+            recipe_form.save()
+
+        return redirect('index')
+
+    context = {
+        'recipe': recipe,
+        'ingredients': ingredients,
+        'shopping_list_ids': my_shopping_list,
+    }
+    return render(request, 'edit_recipe.html', context)
 
 
 @login_required
@@ -139,86 +201,6 @@ def followers(request):
         'shopping_list_ids': shopping_list_ids,
     }
     return render(request, 'followers.html', context)
-
-
-def single_recipe(request, slug):
-    favorites_ids = None
-    shopping_list_ids = None
-    followers_ids = None
-    recipe = Recipe.objects.get(slug=slug)
-    ingredients = RecipeIngredient.objects.filter(recipe=recipe)
-
-    if not request.user.is_anonymous:
-        user = request.user
-        favorites_ids = (Favorite.objects
-                         .filter(user=user)
-                         .values_list('recipe', flat=True))
-        shopping_list_ids = (ShoppingList.objects
-                             .filter(user=user)
-                             .values_list('recipe', flat=True))
-        followers_ids = (Follow.objects
-                         .filter(user=user)
-                         .values_list('author', flat=True))
-
-    context = {
-        'recipe': recipe,
-        'favorites_ids': favorites_ids,
-        'shopping_list_ids': shopping_list_ids,
-        'followers_ids': followers_ids,
-        'ingredients': ingredients,
-    }
-    return render(request, 'single_recipe.html', context)
-
-
-@login_required
-def edit_recipe(request, slug):
-    recipe = Recipe.objects.get(slug=slug)
-    ingredients = RecipeIngredient.objects.filter(recipe=recipe)
-    my_shopping_list = ShoppingList.objects.filter(user=request.user)
-
-    if request.method == 'POST':
-        update_recipe = {
-            'tag': [],
-            'author': request.user
-        }
-        ingredients = []
-
-        for key, value in request.POST.items():
-            if key in ['name', 'time', 'description']:
-                update_recipe[key] = value
-            elif key in ['breakfast', 'lunch', 'dinner']:
-                update_recipe['tag'].append(key)
-            elif (key.startswith('nameIngredient')
-                  or key.startswith('valueIngredient')):
-                ingredients.append(value)
-
-        recipe = Recipe.objects.get(slug=slug)
-        recipe_form = RecipeForm(update_recipe, request.FILES, instance=recipe)
-
-        if recipe_form.is_valid():
-            recipe = recipe_form.save()
-
-        if ingredients:
-            RecipeIngredient.objects.filter(recipe=recipe).delete()
-            for i in range(0, len(ingredients), 2):
-                ingredient = Ingredient.objects.get(title=ingredients[i])
-                recipe_ingredient_form = RecipeIngredientForm(
-                    {
-                        'recipe': recipe,
-                        'ingredient': ingredient,
-                        'amount': ingredients[i + 1]
-                    }
-                )
-                if recipe_ingredient_form.is_valid():
-                    recipe_ingredient_form.save()
-        return redirect('index')
-
-    context = {
-        'recipe': recipe,
-        'ingredients': ingredients,
-        'shopping_list_ids': my_shopping_list,
-    }
-    return render(request, 'edit_recipe.html', context)
 
 
 def shopping_list(request):

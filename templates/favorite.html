@@ -11,7 +11,9 @@
         <div class="card-list">
             {% include "includes/recipes.html" %}
         </div>
-        {% include "includes/pagination.html" %}
+        {% if page.has_other_pages %}
+            {% include "includes/pagination.html" %}
+        {% endif %}
     </main>
 <script src="{% static 'js/components/MainCards.js' %}"></script>
 

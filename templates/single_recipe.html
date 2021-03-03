@@ -58,7 +58,7 @@
                             {% endif %}
                         {% endif %}
                     {% else %}
-                    <li onclick="location.href='/login'" class="single-card__item"><button class="button button_style_blue" name="purchases" data-out><span class="icon-plus"></span> Добавить в покупки</button></li>
+                    <li onclick="location.href='{% url "login" %}'" class="single-card__item"><button class="button button_style_blue" name="purchases" data-out><span class="icon-plus"></span> Добавить в покупки</button></li>
                     {% endif %}
                 </ul>
                 <div class="single-card__section">
