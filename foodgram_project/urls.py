@@ -1,4 +1,4 @@
-from django.conf.urls import handler404, handler500 # noqa
+from django.conf.urls import handler404, handler500  # noqa
 from django.contrib import admin
 from django.contrib.flatpages import views
 from django.urls import include, path

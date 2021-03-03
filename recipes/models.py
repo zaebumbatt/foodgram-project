@@ -2,11 +2,12 @@ import random
 import string
 
 from django.contrib.postgres.fields import ArrayField
-from django.db import models
-from django.utils.text import slugify
 from django.core.validators import MinValueValidator
-from users.models import User
+from django.db import models
 from django.db.models import UniqueConstraint
+from django.utils.text import slugify
+
+from users.models import User
 
 
 class Recipe(models.Model):

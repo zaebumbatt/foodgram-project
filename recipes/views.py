@@ -1,13 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponse
-from django.shortcuts import redirect, render, get_object_or_404
-from django.template import RequestContext
+from django.shortcuts import get_object_or_404, redirect, render
 
 from foodgram_project.settings import COUNT_RECIPE
-from recipes.forms import RecipeForm, RecipeIngredientForm
-from recipes.models import (Favorite, Follow, Ingredient, Recipe,
-                            RecipeIngredient, ShoppingList)
+from recipes.forms import RecipeForm
+from recipes.models import (Favorite, Follow, Recipe, RecipeIngredient,
+                            ShoppingList)
 from recipes.utils import tags_filter
 from users.models import User
 
@@ -135,9 +134,9 @@ def edit_recipe(request, slug):
     ingredients = RecipeIngredient.objects.filter(recipe=recipe)
     my_shopping_list = ShoppingList.objects.filter(user=request.user)
 
-    RecipeIngredient.objects.filter(recipe=recipe).delete()
-
     if request.method == 'POST':
+        RecipeIngredient.objects.filter(recipe=recipe).delete()
+
         recipe_form = RecipeForm(
             request.POST,
             request.FILES,
