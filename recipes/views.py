@@ -143,6 +143,7 @@ def edit_recipe(request, slug):
             username=request.user,
             instance=recipe,
         )
+
         if recipe_form.is_valid():
             recipe_form.save()
 
