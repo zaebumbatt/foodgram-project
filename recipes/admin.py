@@ -27,6 +27,7 @@ class RecipeAdmin(admin.ModelAdmin):
         RecipeIngredientInline,
     ]
 
+
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_filter = ('title',)
