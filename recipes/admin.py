@@ -22,7 +22,8 @@ class RecipeAdmin(admin.ModelAdmin):
         queryset = queryset.annotate(favorite_count=Count("favourite"))
         return queryset
 
-    list_display = ('name', 'favorite_count')
+    list_display = ('name', 'author', 'favorite_count')
+    search_fields = ('name', 'author__username', 'tag')
     inlines = [
         RecipeIngredientInline,
     ]
@@ -30,7 +31,8 @@ class RecipeAdmin(admin.ModelAdmin):
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    list_filter = ('title',)
+    list_display = ('title', 'dimension')
+    search_fields = ('title',)
 
 
 @admin.register(RecipeIngredient)
