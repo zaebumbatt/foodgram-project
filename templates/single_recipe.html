@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Французские тосты{% endblock %}
+{% block title %}{{ recipe.name }}{% endblock %}
 {% block head %}<link rel="stylesheet" href="{% static 'pages/single.css' %}">{% endblock %}
 {% block content %}
     <main class="main container">
@@ -11,7 +11,7 @@
             {% endthumbnail %}
             <div class="single-card__info">
                 <div class="single-card__header-info">
-                    <h1 class="single-card__title"> {{ recipe.name }}</h1>
+                    <h1 class="single-card__title">{{ recipe.name }}</h1>
                     <div class="single-card__favorite">
                         {% if user.is_authenticated %}
                             {% if recipe.id not in favorites_ids %}
