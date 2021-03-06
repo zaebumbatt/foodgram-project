@@ -20,6 +20,7 @@ class RecipeForm(forms.ModelForm):
         required=False,
         choices=TAGS,
     )
+    time = forms.IntegerField(min_value=1)
 
     class Meta:
         model = Recipe

@@ -46,6 +46,7 @@ def author_recipes(request, slug):
     followers_ids = None
     recipes, tag = tags_filter(request, author=slug)
     author_id = get_object_or_404(User, username=slug).id
+
     paginator = Paginator(recipes, COUNT_RECIPE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -248,7 +249,6 @@ def download_shopping_list(request):
         )
         response['Content-Disposition'] = ('attachment; '
                                            'filename="shopping_list.txt"')
-        ShoppingList.objects.filter(user=request.user).delete()
         return response
     return redirect('index')
 
