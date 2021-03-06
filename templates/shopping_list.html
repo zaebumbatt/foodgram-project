@@ -23,7 +23,11 @@
                 </li>
                 {% endfor %}
             </ul>
-            <a href="{% url 'download_shopping_list' %}"><button onClick="window.location.reload();" class="button button_style_blue">Скачать список</button></a>
+            {% if shopping_list_ids|length == 0 %}
+                <a href="{% url 'download_shopping_list' %}"><button class="button button_style_blue">Добавить покупки</button></a>
+            {% else %}
+                <a href="{% url 'download_shopping_list' %}"><button onClick="window.location.reload();" class="button button_style_blue">Скачать список</button></a>
+            {% endif %}
         </div>
     </main>
 <script src="{% static 'js/config/config.js' %}"></script>
