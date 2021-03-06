@@ -40,3 +40,10 @@ http://142.93.108.170:8080/
 
 
 HTML/CSS/Javascript was made by web faculty (thank you).
+
+About me:
+Started to learn programming in the beginning of May 2020.
+
+Studied a bunch of courses and Yandex Practicum is the longest, and the most useful of course.
+
+That was interesting journey and now I'm pretty confident with my skill to start working in this field.
