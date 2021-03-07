@@ -14,31 +14,26 @@ class Recipe(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        blank=False,
         related_name='recipe',
         verbose_name='Автор'
     )
     name = models.CharField(
         max_length=200,
-        blank=False,
         verbose_name='Название'
     )
     image = models.ImageField(
         upload_to='recipe',
-        blank=False,
         verbose_name='Картинка'
     )
     description = models.TextField(
         max_length=300,
-        blank=False,
         verbose_name='Описание'
     )
     tag = ArrayField(
-        base_field=models.CharField(max_length=10, blank=False, ),
+        base_field=models.CharField(max_length=10,),
         verbose_name='Теги'
     )
     time = models.IntegerField(
-        blank=False,
         verbose_name='Время приготовления',
         validators=[MinValueValidator(1)]
     )
@@ -72,12 +67,10 @@ class Recipe(models.Model):
 class Ingredient(models.Model):
     title = models.CharField(
         max_length=200,
-        blank=False,
         verbose_name='Название'
     )
     dimension = models.CharField(
         max_length=10,
-        blank=False,
         verbose_name='Единица измерения'
     )
 
@@ -93,14 +86,12 @@ class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        blank=False,
         related_name='recipe_ingredient',
         verbose_name='Рецепт'
     )
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        blank=False,
         related_name='recipe_ingredient',
         verbose_name='Ингредиент'
     )
