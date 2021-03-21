@@ -1,6 +1,5 @@
 # Foodgram. 
 # Thesis project for Yandex Practicum.
-http://142.93.108.170:8080/
 
 # Run
 1. [Install Docker](https://www.docker.com/products/docker-desktop) and [Docker Compose](https://docs.docker.com/compose/install/) (if you have Linux).
