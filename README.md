@@ -1,5 +1,4 @@
-# Foodgram. 
-# Thesis project for Yandex Practicum.
+# Foodgram. Thesis project for Yandex Practicum.
 
 # Run
 1. [Install Docker](https://www.docker.com/products/docker-desktop) and [Docker Compose](https://docs.docker.com/compose/install/) (if you have Linux).
